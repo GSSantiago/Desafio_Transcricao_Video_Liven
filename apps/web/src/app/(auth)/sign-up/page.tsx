@@ -4,6 +4,7 @@ import Link from "next/link"
 import { GalleryVerticalEnd } from "lucide-react"
 
 import { RegisterForm } from "@/components/register-form"
+import { signUp } from "./action"
 
 export default function RegisterPage() {
   return (
@@ -19,7 +20,7 @@ export default function RegisterPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <RegisterForm />
+            <RegisterForm action={signUp}/>
           </div>
         </div>
       </div>
