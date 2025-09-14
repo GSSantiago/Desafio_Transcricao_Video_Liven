@@ -14,9 +14,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
+model User {
   id             String          @id @default(uuid())
-  nome           String
+  name           String
   email          String          @unique
   transcriptions Transcription[]
 }
@@ -28,10 +28,10 @@ model Transcription {
   finishedAt  DateTime?
   transcript  String?  @db.Text
   fileName    String
-  durationSec Int
-  size        BigInt
+  durationInSeconds Int
+  fileSize        BigInt
   userId      String
-  user        Usuario  @relation(fields: [userId], references: [id])
+  user        User  @relation(fields: [userId], references: [id])
 }
 
 enum Status {
