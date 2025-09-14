@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "dependencies": {
+    "@repo/db": "*",
     "express": "^5.1.0",
     "ts-node-dev": "^2.0.0"
   },
