@@ -1,6 +1,7 @@
 "use server"
 
 import { z } from "zod"
+import { createUser } from "@/services/api/users"
 
 const signUpSchema = z.object({
 	name: z.string().min(2, { message: "O nome deve ter pelo menos 2 caracteres" }),
@@ -22,9 +23,18 @@ export async function signUp(_prevState: unknown, formData: FormData) {
 			return { errors: result.error.flatten().fieldErrors }
 		}
 
+        await createUser({
+            name: result.data.name,
+            email: result.data.email,
+            password: result.data.password
+        });
 
-		return {}
-	} catch (_error) {
+        return {}
+	} catch (error: any) {
+        if (error.response?.data?.error) {
+            return { errors: { global: [error.response.data.error] } }
+        }
+
 		return { errors: { global: ["Ocorreu um erro inesperado. Tente novamente."] } }
 	}
 }
