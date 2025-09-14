@@ -25,8 +25,8 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { name, email } = req.body;
-    const user = await userService.createUser({ name, email });
+    const { name, email, password } = req.body;
+    const user = await userService.createUser({ name, email, password});
     return res.status(201).json(user);
   } catch (error: any) {
     if (error.message === 'Email já está em uso') {

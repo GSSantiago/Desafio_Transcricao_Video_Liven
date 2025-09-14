@@ -1,8 +1,10 @@
 import * as userRepository from '@repo/db/repositories/user';
+import { auth } from '../lib/firebase';
 
 export interface CreateUser {
   name: string;
   email: string;
+  password: string;
 }
 
 export interface UpdateUser {
@@ -28,7 +30,20 @@ export const createUser = async (data: CreateUser) => {
     throw new Error('Email já está em uso');
   }
 
-  return userRepository.create(data);
+  try {
+    const createdUser = await userRepository.create(data);
+
+    await auth.createUser({
+      uid: createdUser.id,
+      email: createdUser.email,
+      displayName: createdUser.name,
+      password: data.password,
+    });
+
+    return createdUser;
+  } catch (error) {
+    throw new Error('Erro ao criar usuário');
+  }
 };
 
 export const updateUser = async (id: string, data: UpdateUser) => {
