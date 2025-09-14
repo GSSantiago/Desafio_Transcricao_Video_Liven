@@ -29,13 +29,14 @@ model Transcription {
   transcript  String?  @db.Text
   fileName    String
   durationInSeconds Int
-  fileSize        BigInt
+  fileSize        Int
   userId      String
   user        User  @relation(fields: [userId], references: [id])
 }
 
 enum Status {
-  processing
-  done
-  failed
+  PROCESSING
+  DONE
+  FAILED
+  PENDING
 }
