@@ -11,11 +11,11 @@ export interface UpdateUser {
 }
 
 export const getAllUsers = async () => {
-  return userRepository.getAll();
+  return userRepository.findAll();
 };
 
 export const getUserById = async (id: string) => {
-  const user = await userRepository.getById(id);
+  const user = await userRepository.findById(id);
   if (!user) {
     throw new Error('Usuário não encontrado');
   }
@@ -23,7 +23,7 @@ export const getUserById = async (id: string) => {
 };
 
 export const createUser = async (data: CreateUser) => {
-  const existUser = await userRepository.getByEmail(data.email);
+  const existUser = await userRepository.findByEmail(data.email);
   if (existUser) {
     throw new Error('Email já está em uso');
   }
@@ -32,7 +32,7 @@ export const createUser = async (data: CreateUser) => {
 };
 
 export const updateUser = async (id: string, data: UpdateUser) => {
-  const user = await userRepository.getById(id);
+  const user = await userRepository.findById(id);
   if (!user) {
     throw new Error('Usuário não encontrado');
   }
@@ -41,7 +41,7 @@ export const updateUser = async (id: string, data: UpdateUser) => {
 };
 
 export const deleteUser = async (id: string) => {
-  const user = await userRepository.getById(id);
+  const user = await userRepository.findById(id);
   if (!user) {
     throw new Error('Usuário não encontrado');
   }
