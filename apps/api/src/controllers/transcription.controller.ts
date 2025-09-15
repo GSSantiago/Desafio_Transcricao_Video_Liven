@@ -38,14 +38,21 @@ export const getTranscriptionsByUserId = async (req: Request, res: Response) => 
 
 export const createTranscription = async (req: Request, res: Response) => {
   try {
-    const { userId, fileName, durationInSeconds, fileSize, status } = req.body;
+    const { userId, status } = req.body;
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ error: 'Arquivo de vídeo é obrigatório' });
+    }
+
     const transcription = await transcriptionService.createTranscription({
       userId,
-      fileName,
-      durationInSeconds,
-      fileSize,
+      file,
       status,
+      fileName: file.originalname,
+      fileSize: file.size,
     });
+
     return res.status(201).json(transcription);
   } catch (error: any) {
     if (error.message === 'Usuário não encontrado') {

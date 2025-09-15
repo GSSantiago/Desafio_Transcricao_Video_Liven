@@ -2,11 +2,13 @@ import { Status } from '@repo/db';
 import * as transcriptionRepository from '@repo/db/repositories/transcription';
 import * as userRepository from '@repo/db/repositories/user';
 
+import { getMediaDuration } from '../utils/media';
+
 export interface CreateTranscription {
   userId: string;
   fileName: string;
-  durationInSeconds: number;
   fileSize: number;
+  file: Express.Multer.File;
   status: Status;
 }
 
@@ -42,8 +44,11 @@ export const createTranscription = async (data: CreateTranscription) => {
     throw new Error('Usuário não encontrado');
   }
 
+  const durationInSeconds = await getMediaDuration(data.file.path);
+
   return transcriptionRepository.create({
     ...data,
+    durationInSeconds,
     status: Status.PROCESSING, 
   });
 };
