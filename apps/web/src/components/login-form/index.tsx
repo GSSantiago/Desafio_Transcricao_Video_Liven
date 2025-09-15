@@ -31,7 +31,9 @@ export function LoginForm({ action }: LoginFormProps) {
     <div className={cn("flex flex-col gap-6")} >
       <Card>
         <CardHeader>
-          <CardTitle className="text-center">Liven - Transcrição de video</CardTitle>
+          <CardTitle className="text-center">
+            <Link href="/" className="underline">Transcriptor 3000</Link>
+          </CardTitle>
           <CardDescription className="text-center">
            Digite suas credenciais nos campos abaixo
           </CardDescription>

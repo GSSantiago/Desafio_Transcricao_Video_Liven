@@ -32,8 +32,8 @@ export function RegisterForm({ action }: RegisterFormProps) {
             </Link>
         </div>
         <div>
-            <h1 className="text-2xl font-bold text-white leading-tight">Crie sua conta</h1>
-            <p className="text-sm text-balance text-white leading-tight">
+            <h1 className="text-2xl font-bold leading-tight">Crie sua conta</h1>
+            <p className="text-sm text-balance leading-tight">
             Preencha os campos abaixo para se registrar
             </p>
         </div>
@@ -41,7 +41,7 @@ export function RegisterForm({ action }: RegisterFormProps) {
        </div>
       <div className="grid gap-6">
         <div className="grid gap-3">
-          <Label htmlFor="name" className="text-white">Nome</Label>
+          <Label htmlFor="name">Nome</Label>
           <div>
             <Input id="name" type="text" name="name" placeholder="Seu nome" required className="bg-white" />
             {state.errors?.name && (
@@ -50,7 +50,7 @@ export function RegisterForm({ action }: RegisterFormProps) {
           </div>
         </div>
         <div className="grid gap-3">
-          <Label htmlFor="email" className="text-white">Email</Label>
+          <Label htmlFor="email">Email</Label>
           <div>
             <Input id="email" name="email" placeholder="liven@example.com" required className="bg-white" />
             {state.errors?.email && (
@@ -59,7 +59,7 @@ export function RegisterForm({ action }: RegisterFormProps) {
           </div>
         </div>
         <div className="grid gap-3">
-          <Label htmlFor="password" className="text-white">Senha</Label>
+          <Label htmlFor="password">Senha</Label>
           <div>
             <Input id="password" type="password" name="password" placeholder="Sua senha" required className="bg-white" />
             {state.errors?.password && (
@@ -68,7 +68,7 @@ export function RegisterForm({ action }: RegisterFormProps) {
           </div>
         </div>
         <div className="grid gap-3">
-          <Label htmlFor="confirmPassword" className="text-white">Confirme a senha</Label>
+          <Label htmlFor="confirmPassword">Confirme a senha</Label>
           <div>
             <Input id="confirmPassword" type="password" name="confirmPassword" placeholder="Confirme sua senha" required className="bg-white" />
             {state.errors?.confirmPassword && (
