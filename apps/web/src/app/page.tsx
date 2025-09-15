@@ -1,3 +1,4 @@
+'use server'
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 
@@ -6,10 +7,10 @@ import { Button, buttonVariants } from "@repo/ui/components/button"
 
 import Header from "@/components/header";
 
-export default function Page(){
+export default async function Page(){
   return (
     <>
-    <Header/>
+    <Header />
     <section className="relative overflow-hidden py-16">
       <div className="relative z-10 container mx-auto">
         <div>

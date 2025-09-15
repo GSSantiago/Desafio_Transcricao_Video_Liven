@@ -1,3 +1,4 @@
+'use client'
 import Image from "next/image";
 import Link from "next/link";
 
@@ -28,6 +29,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@repo/ui/components/sheet";
+import { AuthUserProvider, useAuth } from "@/context/AuthUserContext";
 
 interface MenuItem {
   title: string;
@@ -106,7 +108,9 @@ const renderMobileMenuItem = (item: MenuItem) => {
   );
 };
 
-export default function Header() {
+function HeaderWitAuth() {
+  const { authUser, signOut } = useAuth();
+
 
   const logo = {
     url: "/",
@@ -127,109 +131,117 @@ export default function Header() {
   ];
 
   return (
-    <section className="py-4 flex justify-center">
-      <div className="container">
-        {/* Desktop Menu */}
-        <nav className="hidden justify-between lg:flex">
-          <div className="flex items-center gap-6">
-            <Link href={logo.url} className="flex items-center gap-2">
-              <Image
-                src={logo.src}
-                alt={logo.alt}
-                width={32}
-                height={32}
-                className="max-h-8 dark:invert"
-              />
-              <span className="text-lg font-semibold tracking-tighter">
-                {logo.title}
-              </span>
-            </Link>
-            <div className="flex items-center">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  {menu.map((item) => renderMenuItem(item))}
-                </NavigationMenuList>
-              </NavigationMenu>
+      <section className="py-4 flex justify-center">
+        <div className="container">
+          {/* Desktop Menu */}
+          <nav className="hidden justify-between lg:flex">
+            <div className="flex items-center gap-6">
+              <Link href={logo.url} className="flex items-center gap-2">
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={32}
+                  height={32}
+                  className="max-h-8 dark:invert"
+                />
+                <span className="text-lg font-semibold tracking-tighter">
+                  {logo.title}
+                </span>
+              </Link>
+              <div className="flex items-center">
+                <NavigationMenu>
+                  <NavigationMenuList>
+                    {menu.map((item) => renderMenuItem(item))}
+                  </NavigationMenuList>
+                </NavigationMenu>
+              </div>
             </div>
-          </div>
-          {true ?
-            <div className="flex gap-2">
-              <Button asChild variant="outline" size="sm">
-                <Link href={auth.login.url}>{auth.login.title}</Link>
-              </Button>
-              <Button asChild size="sm">
-                <Link href={auth.signup.url}>{auth.signup.title}</Link>
-              </Button>
-            </div>
-            : 
-            <div className="flex gap-2"> 
-                <div className="flex items-center px-3 py-1 rounded-full text-sm font-medium">
-                  <User />
-                  <span className="ml-2">Guilherme</span>
-                </div>
-                <Button asChild size="sm">
-                  <Link href={auth.logout.url}>{auth.logout.title}</Link>
-                </Button>
-            </div>
-      }
-        </nav>
-
-        {/* Mobile Menu */}
-        <div className="block lg:hidden">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link href={logo.url} className="flex items-center gap-2">
-              <Image
-                src={logo.src}
-                alt={logo.alt}
-                width={32}
-                height={32}
-                className="max-h-8 dark:invert"
-              />
-            </Link>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu className="size-4" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>
-                    <Link href={logo.url} className="flex items-center gap-2">
-                      <Image
-                        src={logo.src}
-                        alt={logo.alt}
-                        width={32}
-                        height={32}
-                        className="max-h-8 dark:invert"
-                      />
-                    </Link>
-                  </SheetTitle>
-                </SheetHeader>
-                <div className="flex flex-col gap-6 p-4">
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="flex w-full flex-col gap-4"
-                  >
-                    {menu.map((item) => renderMobileMenuItem(item))}
-                  </Accordion>
-
-                  <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <Link href={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
-                    <Button asChild>
-                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button>
+            {authUser ? 
+              <div className="flex gap-2"> 
+                  <div className="flex items-center px-3 py-1 rounded-full text-sm font-medium">
+                    <User />
+                    <span className="ml-2">{authUser.name}</span>
                   </div>
-                </div>
-              </SheetContent>
-            </Sheet>
+                  <Button size="sm" onClick={() => signOut()}>
+                    {auth.logout.title}
+                  </Button>
+              </div>
+              :
+              <div className="flex gap-2">
+                <Button asChild variant="outline" size="sm">
+                  <Link href={auth.login.url}>{auth.login.title}</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                </Button>
+              </div>
+        }
+          </nav>
+
+          {/* Mobile Menu */}
+          <div className="block lg:hidden">
+            <div className="flex items-center justify-between">
+              {/* Logo */}
+              <Link href={logo.url} className="flex items-center gap-2">
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={32}
+                  height={32}
+                  className="max-h-8 dark:invert"
+                />
+              </Link>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <Menu className="size-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="overflow-y-auto">
+                  <SheetHeader>
+                    <SheetTitle>
+                      <Link href={logo.url} className="flex items-center gap-2">
+                        <Image
+                          src={logo.src}
+                          alt={logo.alt}
+                          width={32}
+                          height={32}
+                          className="max-h-8 dark:invert"
+                        />
+                      </Link>
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col gap-6 p-4">
+                    <Accordion
+                      type="single"
+                      collapsible
+                      className="flex w-full flex-col gap-4"
+                    >
+                      {menu.map((item) => renderMobileMenuItem(item))}
+                    </Accordion>
+
+                    <div className="flex flex-col gap-3">
+                      <Button asChild variant="outline">
+                        <Link href={auth.login.url}>{auth.login.title}</Link>
+                      </Button>
+                      <Button asChild>
+                        <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                      </Button>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
   );
+}
+
+export default function Header() {
+  return(
+    <AuthUserProvider>
+      <HeaderWitAuth/>
+    </AuthUserProvider>
+    );
 }

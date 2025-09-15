@@ -2,8 +2,6 @@
 
 import Link from "next/link"
 
-import { useActionState } from "react";
-
 import { cn } from "@repo/ui/lib/utils"
 import { Button } from "@repo/ui/components/button"
 import {
@@ -16,16 +14,15 @@ import {
 import { Input } from "@repo/ui/components/input"
 import { Label } from "@repo/ui/components/label"
 
-type ActionResult = {
-  errors?: Record<string, string[]>
-}
+// type ActionResult = {
+//   errors?: Record<string, string[]>
+// }
 
 type LoginFormProps = {
-  action: (state: ActionResult, formData: FormData) => Promise<ActionResult>
+  onSubmit: any;
 }
 
-export function LoginForm({ action }: LoginFormProps) {
-  const [state, formAction ] = useActionState(action, {})
+export function LoginForm({ onSubmit }: LoginFormProps) {
 
   return (
     <div className={cn("flex flex-col gap-6")} >
@@ -39,7 +36,7 @@ export function LoginForm({ action }: LoginFormProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={formAction}>
+          <form onSubmit={onSubmit}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
@@ -50,9 +47,9 @@ export function LoginForm({ action }: LoginFormProps) {
                     placeholder="liven@example.com"
                     required
                   />
-                  {state.errors?.email && (
+                  {/* {state.errors?.email && (
                     <span className="text-xs px-1 text-red-500">{state.errors.email[0]}</span>
-                  )}
+                  )} */}
                 </div>
               </div>
               <div className="grid gap-3">
@@ -61,9 +58,9 @@ export function LoginForm({ action }: LoginFormProps) {
                 </div>
                 <div>
                   <Input id="password" type="password" name="password" required />
-                  {state.errors?.password && (
+                  {/* {state.errors?.password && (
                     <span className="text-xs px-1 text-red-500">{state.errors.password[0]}</span>
-                  )}
+                  )} */}
                 </div>
               </div>
               <div className="flex flex-col gap-3">
