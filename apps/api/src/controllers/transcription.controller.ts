@@ -29,9 +29,12 @@ export const getTranscriptionsByUserId = async (req: Request, res: Response) => 
     const transcriptions = await transcriptionService.getTranscriptionsByUserId(userId);
     return res.json(transcriptions);
   } catch (error: any) {
-    if (error.message === 'Usuário não encontrado') {
+    if (error.message === 'Usuário não encontrado')
       return res.status(404).json({ error: error.message });
-    }
+    
+    if(error.message.includes('Limite diário'))
+      return res.status(429).json({ error: error.message });
+  
     return res.status(500).json({ error: error.message });
   }
 };

@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 import { Button } from "@repo/ui/components/button";
 import { createTranscription } from "@/services/api/transcription";
+import { AxiosError } from "axios";
 
 export default function Transcriptions() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -44,8 +45,12 @@ const handleUpload = async () => {
         throw new Error('Erro ao fazer a solicitação');
 
     } catch (error: unknown) {
-      console.log(error)
-      toast.error('Ocorreu um erro na solicitação!')
+      console.log(error);
+        if(error instanceof AxiosError && error.message.includes('Limite diário')) {
+          toast.error(error.message);
+        }
+        else
+        toast.error('Ocorreu um erro na solicitação!')
     } finally {
       setLoading(false);
       setSelectedFile(null);

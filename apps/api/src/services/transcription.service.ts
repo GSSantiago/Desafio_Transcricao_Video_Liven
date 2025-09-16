@@ -7,6 +7,7 @@ import * as userRepository from '@repo/db/repositories/user';
 import { getMediaDuration } from '../utils/media';
 
 import openai from '../lib/openai';
+import { MAX_PER_DAY } from "../constants/quota";
 
 export interface CreateTranscription {
   userId: string;
@@ -46,6 +47,12 @@ export const createTranscription = async (data: CreateTranscription) => {
   const user = await userRepository.findById(data.userId);
   if (!user) {
     throw new Error('Usuário não encontrado');
+  }
+
+  const { totalTranscriptions } = await transcriptionRepository.getUserDailyUsage(data.userId);
+
+  if(totalTranscriptions >= MAX_PER_DAY) {
+    throw new Error(`Limite diário de ${MAX_PER_DAY} transcrições atingido`);
   }
 
   const durationInSeconds = await getMediaDuration(data.file.path);

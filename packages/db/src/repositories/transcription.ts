@@ -58,3 +58,30 @@ export const remove = async (id: string): Promise<void> => {
 export const findAll = async (): Promise<Transcription[]> => {
   return prisma.transcription.findMany();
 };
+
+export const getUserDailyUsage = async (userId: string) => {
+  const startDate = new Date(new Date().setHours(0, 0, 0));  
+  const endDate = new Date(new Date().setHours(23, 59, 59));
+
+  const result = await prisma.transcription.aggregate({
+    _sum: {
+      durationInSeconds: true,
+      fileSize: true,
+    },
+    _count: true,
+    where: {
+      userId,
+      createdAt: {
+        gte: startDate, 
+        lt: endDate, 
+      },
+    },
+  });
+
+  return {
+    totalDuration: result._sum.durationInSeconds || 0,
+    totalFileSize: result._sum.fileSize || 0,
+    totalTranscriptions: result._count,
+
+  };
+};
