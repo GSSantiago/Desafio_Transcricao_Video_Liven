@@ -1,13 +1,13 @@
 import { api } from '@/lib/axios'
 
 //#TODO Remover essa tipagem e usar a do packages/schema
-interface Transcription {
+export interface Transcription {
   id: string
   userId: string
   fileName: string
   durationInSeconds: number
   fileSize: number
-  status: string
+  status: "FAILED" | "PROCESSING" | "DONE"
   createdAt: string
   finishedAt?: string
   transcript?: string
@@ -30,5 +30,10 @@ export async function createTranscription(data: CreateTranscription): Promise<Tr
     }
   });
 
+  return response.data;
+}
+
+export async function getAllTranscriptionsByUserId(userId: string): Promise<Transcription[]> {
+  const response = await api.get<Transcription[]>(`/transcription/user/${userId}`);
   return response.data;
 }

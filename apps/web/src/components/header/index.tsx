@@ -127,7 +127,8 @@ function HeaderWitAuth() {
 
   const menu = [
     { title: "Home", url: "/" },
-    { title: "Transcrição", url: "/transciption" },
+    { title: "Transcrição", url: "/transcription" },
+    { title: "Histórico", url: "/history" },
   ];
 
   return (
