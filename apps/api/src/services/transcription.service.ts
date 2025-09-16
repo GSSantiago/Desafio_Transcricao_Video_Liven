@@ -4,7 +4,7 @@ import { Status } from '@repo/db';
 import * as transcriptionRepository from '@repo/db/repositories/transcription';
 import * as userRepository from '@repo/db/repositories/user';
 
-import { getMediaDuration } from '../utils/media';
+import { convertToMP3, getMediaDuration } from '../utils/media';
 
 import openai from '../lib/openai';
 import { MAX_PER_DAY } from "../constants/quota";
@@ -52,6 +52,10 @@ export const createTranscription = async (data: CreateTranscription) => {
   const { totalTranscriptions } = await transcriptionRepository.getUserDailyUsage(data.userId);
 
   if(totalTranscriptions >= MAX_PER_DAY) {
+    fs.unlink(data.file.path, (err) => {
+        if (err) {
+            console.error("Erro ao deletar arquivo temporário:", err);
+    }});
     throw new Error(`Limite diário de ${MAX_PER_DAY} transcrições atingido`);
   }
 
@@ -63,16 +67,18 @@ export const createTranscription = async (data: CreateTranscription) => {
     status: Status.PROCESSING, 
   });
 
-  processTranscription(data.file.path, entity.id);
+  processTranscription(data.file.path, entity.id, data.file.filename);
 
   return entity;
 };
 
-const processTranscription = async (filePath: string, transcriptionId: string) => {
-
+const processTranscription = async (filePath: string, transcriptionId: string, filename: string) => {
+    let mp3Pathname: string | undefined = undefined;
     try {
+        mp3Pathname = await convertToMP3(filePath, filename);
+        
         const transcription = await openai.audio.transcriptions.create({
-        file: fs.createReadStream(filePath),
+        file: fs.createReadStream(mp3Pathname || filePath),
         model: process.env.TRANSCRIPTION_MODEL || "gpt-4o-transcribe",
         });
 
@@ -89,11 +95,15 @@ const processTranscription = async (filePath: string, transcriptionId: string) =
             finishedAt: new Date(),
         });
     }finally {
-        fs.unlink(filePath, (err) => {
-            if (err) {
-                console.error("Erro ao deletar arquivo temporário:", err);
-            }
-        });
+      [mp3Pathname, filePath].forEach(path => {
+          if (path) {
+            fs.unlink(path, (err) => {
+              if (err) {
+                  console.error(`Erro ao deletar arquivo temporário ${path}:`, err);
+              }
+          });
+        }}
+      );
     }
 }
 
