@@ -42,7 +42,7 @@ export const createTranscription = async (req: Request, res: Response) => {
     const file = req.file;
 
     if (!file) {
-      return res.status(400).json({ error: 'Arquivo de vídeo é obrigatório' });
+      return res.status(400).json({ error: 'O arquivo de vídeo é obrigatório' });
     }
 
     const transcription = await transcriptionService.createTranscription({

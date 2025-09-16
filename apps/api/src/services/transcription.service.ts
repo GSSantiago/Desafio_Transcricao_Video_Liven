@@ -1,8 +1,12 @@
+import fs from "fs";
+
 import { Status } from '@repo/db';
 import * as transcriptionRepository from '@repo/db/repositories/transcription';
 import * as userRepository from '@repo/db/repositories/user';
 
 import { getMediaDuration } from '../utils/media';
+
+import openai from '../lib/openai';
 
 export interface CreateTranscription {
   userId: string;
@@ -46,12 +50,45 @@ export const createTranscription = async (data: CreateTranscription) => {
 
   const durationInSeconds = await getMediaDuration(data.file.path);
 
-  return transcriptionRepository.create({
+   const entity =  await transcriptionRepository.create({
     ...data,
     durationInSeconds,
     status: Status.PROCESSING, 
   });
+
+  processTranscription(data.file.path, entity.id);
+
+  return entity;
 };
+
+const processTranscription = async (filePath: string, transcriptionId: string) => {
+
+    try {
+        const transcription = await openai.audio.transcriptions.create({
+        file: fs.createReadStream(filePath),
+        model: process.env.TRANSCRIPTION_MODEL || "gpt-4o-transcribe",
+        });
+
+        await transcriptionRepository.update(transcriptionId, {
+            status: Status.DONE,
+            finishedAt: new Date(),
+            transcript: transcription.text,
+        });
+
+    } catch (error) {
+        console.error("Erro ao processar transcrição:", error);
+        await transcriptionRepository.update(transcriptionId, {
+            status: Status.FAILED,
+            finishedAt: new Date(),
+        });
+    }finally {
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error("Erro ao deletar arquivo temporário:", err);
+            }
+        });
+    }
+}
 
 export const updateTranscription = async (id: string, data: UpdateTranscription) => {
   const transcription = await transcriptionRepository.findById(id);

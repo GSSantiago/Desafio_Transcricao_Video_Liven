@@ -6,6 +6,7 @@ export interface CreateTranscription {
   durationInSeconds: number;
   fileSize: number;
   status: Status;
+  transcript?: string;
 }
 
 export interface UpdateTranscription {
@@ -21,6 +22,7 @@ export const create = async (data: CreateTranscription): Promise<Transcription> 
       fileName: data.fileName,
       durationInSeconds: data.durationInSeconds,
       fileSize: data.fileSize,
+      transcript: data.transcript || null,
       status: data.status || Status.PENDING,
     },
   });

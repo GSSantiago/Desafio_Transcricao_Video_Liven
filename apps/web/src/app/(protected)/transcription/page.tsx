@@ -1,11 +1,13 @@
 'use client'
 import { useRef, useState } from "react";
+
 import { Upload } from "lucide-react";
 
 import { Button } from "@repo/ui/components/button";
 import { createTranscription } from "@/services/api/transcription";
 
 export default function Transcriptions() {
+  const [loading, setLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -24,6 +26,8 @@ const handleUpload = async () => {
       return;
     }
 
+    setLoading(true);
+
     try {
       // TODO: trocar pelo userId real do usuário logado
       const userId = "07b90e56-59b2-4040-a072-3a0d488648e6"
@@ -34,9 +38,13 @@ const handleUpload = async () => {
       })
       
       console.log('Enviado com sucesso:', transcription);
-    } catch (error: any) {
-        console.log(error)
-    } 
+    } catch (error: unknown) {
+      console.log(error)
+    } finally {
+      setLoading(false);
+      setSelectedFile(null);
+      fileInputRef.current!.value = "";
+    }
   }
 
   return (
@@ -59,6 +67,7 @@ const handleUpload = async () => {
                 className="shadow-sm transition-shadow hover:shadow px-8 py-6 text-lg"
                 variant="default"
                 onClick={handleButtonClick}
+                disabled={loading}
                 >
                     <Upload className="mr-2 h-6 w-6" />
                     Enviar vídeo
@@ -81,8 +90,9 @@ const handleUpload = async () => {
                     <Button
                     onClick={handleUpload}
                     className="px-6 py-4 text-md"
+                    disabled={loading}
                     >
-                    Enviar para transcrição
+                    {loading ? 'Enviando...' : 'Enviar para transcrição'}
                     </Button>
                 </>
               )}
