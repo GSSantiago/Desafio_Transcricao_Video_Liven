@@ -1,6 +1,8 @@
 'use client'
 import { useRef, useState } from "react";
+
 import { Upload } from "lucide-react";
+import { toast } from 'react-toastify';
 
 import { Button } from "@repo/ui/components/button";
 import { createTranscription } from "@/services/api/transcription";
@@ -35,10 +37,15 @@ const handleUpload = async () => {
         userId,
         file: selectedFile,
       })
-      
-      console.log('Enviado com sucesso:', transcription);
+
+      if(transcription.id)
+        toast.success('Solicitação feita com sucesso!')
+      else 
+        throw new Error('Erro ao fazer a solicitação');
+
     } catch (error: unknown) {
       console.log(error)
+      toast.error('Ocorreu um erro na solicitação!')
     } finally {
       setLoading(false);
       setSelectedFile(null);

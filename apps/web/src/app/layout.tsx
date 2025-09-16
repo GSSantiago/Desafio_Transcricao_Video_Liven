@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ToastContainer } from 'react-toastify';
 
 import "@repo/ui/globals.css"
 
@@ -17,6 +18,7 @@ export default function RootLayout({
     <html lang="pt-br">
       <body>
           {children}
+          <ToastContainer autoClose={ 3000 }/>
       </body>
     </html>
   );
