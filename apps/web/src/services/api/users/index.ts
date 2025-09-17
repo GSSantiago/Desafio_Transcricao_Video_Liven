@@ -1,6 +1,5 @@
 import { api } from "@/lib/axios";
 
-//#TODO Remover essa tipagem e usar a do packages/schema
 interface User {
   id: string;
   name: string;
