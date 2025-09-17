@@ -7,11 +7,15 @@ import { toast } from 'react-toastify';
 import { Button } from "@repo/ui/components/button";
 import { createTranscription } from "@/services/api/transcription";
 import { AxiosError } from "axios";
+import { useAuth } from "@/context/AuthUserContext";
 
 export default function Transcriptions() {
   const [loading, setLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const { authUser } = useAuth();
+  
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -31,11 +35,8 @@ const handleUpload = async () => {
     setLoading(true);
 
     try {
-      // TODO: trocar pelo userId real do usuário logado
-      const userId = "07b90e56-59b2-4040-a072-3a0d488648e6"
-
       const transcription = await createTranscription({
-        userId,
+        userId: authUser?.uid || '',
         file: selectedFile,
       })
 
@@ -69,7 +70,7 @@ const handleUpload = async () => {
               </h1>
               <p className="mx-auto max-w-3xl text-muted-foreground lg:text-xl">
                 Faça o upload do seu vídeo e nossa ferramenta de IA gera a transcrição automática
-                de forma rápida e precisa.
+                de forma rápida e precisa e encontre suas transcrições na página de histórico
               </p>
             </div>
 
@@ -81,13 +82,13 @@ const handleUpload = async () => {
                 disabled={loading}
                 >
                     <Upload className="mr-2 h-6 w-6" />
-                    Enviar vídeo
+                    Enviar mídia
                 </Button>
 
 
               <input
                 type="file"
-                accept="video/*"
+                accept="audio/mpeg,audio/wav,audio/mp4,video/mp4,video/x-matroska,video/webm"
                 ref={fileInputRef}
                 onChange={handleFileChange}
                 className="hidden"

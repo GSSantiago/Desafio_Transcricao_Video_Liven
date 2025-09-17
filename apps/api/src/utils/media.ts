@@ -48,7 +48,7 @@ export function convertToMP3(filePath: string, filename: string): Promise<string
   });
  }
 
- export function splitAudio(filePath: string): Promise<string[]> {
+ export function splitAudio(filePath: string, fileName: string): Promise<string[]> {
   return new Promise(async (resolve, reject) => {
     const outputFolder = path.dirname(filePath);
 
@@ -56,7 +56,7 @@ export function convertToMP3(filePath: string, filename: string): Promise<string
 
     const maxDurationSec = Math.floor(MAX_SIZE / bitrate);
 
-    const outputPattern = path.join(outputFolder, "part-%03d.mp3");
+    const outputPattern = path.join(outputFolder, `part-${fileName}-%03d.mp3`);
 
     ffmpeg(filePath)
         .outputOptions([

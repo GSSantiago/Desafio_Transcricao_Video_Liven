@@ -4,12 +4,16 @@ import Link from "next/link";
 
 import { Menu, User } from "lucide-react";
 
+import Icon from 'public/video-icon.svg'
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@repo/ui/components/accordion";
+
+import { LoadingSpinner } from "@repo/ui/components/loading";
 
 import { Button } from "@repo/ui/components/button";
 
@@ -108,21 +112,48 @@ const renderMobileMenuItem = (item: MenuItem) => {
   );
 };
 
-function HeaderWitAuth() {
-  const { authUser, signOut } = useAuth();
-
-
-  const logo = {
-    url: "/",
-    src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
-    alt: "logo",
-    title: "Transcriptor 3000"
-  };
+const AuthButton = () => {
+  const { authUser, signOut, loading } = useAuth();
 
   const auth = {
     login: { title: "Login", url: "/login" },
     signup: { title: "Registre-se", url: "/sign-up" },
     logout: { title: "Sair", url: "/logout" },
+  };
+
+  if(loading && authUser) return <LoadingSpinner />
+
+  if(authUser)
+    return (
+   <div className="flex gap-2"> 
+        <div className="flex items-center px-3 py-1 rounded-full text-sm font-medium">
+          <User />
+          <span className="ml-2">{authUser.name}</span>
+        </div>
+        <Button size="sm" onClick={() => signOut()}>
+          {auth.logout.title}
+        </Button>
+    </div>
+    )
+
+   return (
+    <div className="flex gap-2">
+        <Button asChild variant="outline" size="sm">
+          <Link href={auth.login.url}>{auth.login.title}</Link>
+        </Button>
+        <Button asChild size="sm">
+          <Link href={auth.signup.url}>{auth.signup.title}</Link>
+        </Button>
+      </div>
+    )
+}
+
+function HeaderWitAuth() {
+  const logo = {
+    url: "/",
+    src: Icon,
+    alt: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
+    title: "Transcriptor 3000"
   };
 
   const menu = [
@@ -141,8 +172,8 @@ function HeaderWitAuth() {
                 <Image
                   src={logo.src}
                   alt={logo.alt}
-                  width={32}
-                  height={32}
+                  width={20}
+                  height={20}
                   className="max-h-8 dark:invert"
                 />
                 <span className="text-lg font-semibold tracking-tighter">
@@ -157,26 +188,8 @@ function HeaderWitAuth() {
                 </NavigationMenu>
               </div>
             </div>
-            {authUser ? 
-              <div className="flex gap-2"> 
-                  <div className="flex items-center px-3 py-1 rounded-full text-sm font-medium">
-                    <User />
-                    <span className="ml-2">{authUser.name}</span>
-                  </div>
-                  <Button size="sm" onClick={() => signOut()}>
-                    {auth.logout.title}
-                  </Button>
-              </div>
-              :
-              <div className="flex gap-2">
-                <Button asChild variant="outline" size="sm">
-                  <Link href={auth.login.url}>{auth.login.title}</Link>
-                </Button>
-                <Button asChild size="sm">
-                  <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                </Button>
-              </div>
-        }
+           
+            <AuthButton />
           </nav>
 
           {/* Mobile Menu */}
@@ -221,14 +234,7 @@ function HeaderWitAuth() {
                       {menu.map((item) => renderMobileMenuItem(item))}
                     </Accordion>
 
-                    <div className="flex flex-col gap-3">
-                      <Button asChild variant="outline">
-                        <Link href={auth.login.url}>{auth.login.title}</Link>
-                      </Button>
-                      <Button asChild>
-                        <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                      </Button>
-                    </div>
+                    <AuthButton />
                   </div>
                 </SheetContent>
               </Sheet>

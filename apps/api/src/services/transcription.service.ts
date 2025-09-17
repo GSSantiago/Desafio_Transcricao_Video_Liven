@@ -80,10 +80,10 @@ const processTranscription = async (file: Express.Multer.File, transcriptionId: 
        let transcript: string = ''; 
        mp3Pathname = await convertToMP3(file.path, file.filename);
 
-       const { size : mp3fileSize } = fs.statSync(mp3Pathname);
+       const { size : mp3fileSize} = fs.statSync(mp3Pathname);
        
        if(mp3fileSize > MAX_SIZE)
-         transcript = await processMultipleAudios(mp3Pathname);
+         transcript = await processMultipleAudios(mp3Pathname, file.filename);
        else
          transcript = await processSingleAudio(mp3Pathname);
 
@@ -125,8 +125,8 @@ const processSingleAudio = async (audioPath: string) => {
     }
 }
 
-const processMultipleAudios = async (audioPath: string) => {
-    const audioPaths = await splitAudio(audioPath);
+const processMultipleAudios = async (audioPath: string, rootName: string) => {
+    const audioPaths = await splitAudio(audioPath, rootName);
     try {
         let fullTranscript = '';
         for (const path of audioPaths) {

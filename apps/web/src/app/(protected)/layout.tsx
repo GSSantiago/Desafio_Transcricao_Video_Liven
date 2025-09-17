@@ -3,11 +3,15 @@ import { ReactNode } from "react";
 
 import Header from "@/components/header";
 
+import { AuthUserProvider } from "@/context/AuthUserContext";
+
 export default function Layout({ children }: { children: ReactNode }) {
   return (
   <>
-    <Header/>
-    {children}
+    <AuthUserProvider>
+      <Header/>
+      {children}
+    </AuthUserProvider>
   </>
   );
 }

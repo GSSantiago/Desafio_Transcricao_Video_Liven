@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   Table,
@@ -14,30 +14,41 @@ import { Button } from "@repo/ui/components/button"
 import { getAllTranscriptionsByUserId, Transcription } from "@/services/api/transcription";
 import { handleTxtDownload } from "@/utils/download"
 import { formatDate, formatDuration, formatStatus } from "@/utils/format";
+import { useAuth } from "@/context/AuthUserContext";
+
+import { LoadingSpinner } from "@repo/ui/components/loading";
 
 export default function UserHistory() {
   const [loading, setLoading] = useState(true);
   const [transcriptions, setTranscriptions] = useState<Transcription[]>([]);
 
-  const fetchTranscriptions = async () => {
+  const { authUser } = useAuth();
+  
+  const fetchTranscriptions = useCallback(async () => {
     setLoading(true);
-    const userId = "07b90e56-59b2-4040-a072-3a0d488648e6";
+    const userId = authUser?.uid;
 
     try {
-      const data = await getAllTranscriptionsByUserId(userId);
+      const data = await getAllTranscriptionsByUserId(userId!);
       setTranscriptions(data);
     } catch (error) {
       console.error("Erro ao buscar transcrições:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [authUser]);
 
   useEffect(() => {
+    if(authUser?.uid)
     fetchTranscriptions();
-  }, []);
+  }, [authUser, fetchTranscriptions]);
 
-  if (loading) return null;
+  if (loading) 
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <LoadingSpinner />
+    </div>
+    )
 
   return (
     <section className="relative overflow-hidden py-16">
@@ -53,7 +64,7 @@ export default function UserHistory() {
               onClick={fetchTranscriptions}
               disabled={loading}
             >
-              {loading ? "Atualizando..." : "Atualizar"}
+              {loading ? <LoadingSpinner />  : "Atualizar"}
             </Button>
           </div>
 

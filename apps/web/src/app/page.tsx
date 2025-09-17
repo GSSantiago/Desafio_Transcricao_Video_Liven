@@ -1,9 +1,12 @@
 'use server'
+import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 
 import { cn } from "@repo/ui/lib/utils"
 import { Button, buttonVariants } from "@repo/ui/components/button"
+
+import Icon from 'public/video-icon.svg'
 
 import Header from "@/components/header";
 
@@ -17,11 +20,9 @@ export default async function Page(){
           <div className="flex flex-col items-center gap-6 text-center">
             <div className="rounded-xl bg-background/30 p-4 shadow-sm backdrop-blur-sm">
               <Image
-                src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/block-1.svg"
-                alt="logo"
+                src={Icon}
+                alt="Icon"
                 className="h-16"
-                width={64}
-                height={64}
               />
             </div>
             <div>
@@ -34,12 +35,16 @@ export default async function Page(){
               </p>
             </div>
             <div className="mt-6 flex justify-center gap-3">
-              <Button className="shadow-sm transition-shadow hover:shadow">
-                Envie um arquivo já
+              <Button asChild className="shadow-sm transition-shadow hover:shadow">
+                <Link href="/transcription">
+                  Envie um arquivo já
+                </Link>
               </Button>
-              <Button variant="outline" className="group">
-                Entenda mais{" "}
-                <ExternalLink className="ml-2 h-4 transition-transform group-hover:translate-x-0.5" />
+              <Button asChild variant="outline" className="group">
+                <Link href="#">
+                  Entenda mais
+                  <ExternalLink className="ml-2 h-4 transition-transform group-hover:translate-x-0.5" />
+                </Link>
               </Button>
             </div>
             <div className="mt-20 flex flex-col items-center gap-5">
