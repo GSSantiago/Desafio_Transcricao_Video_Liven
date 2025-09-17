@@ -4,10 +4,11 @@ import { Status } from '@repo/db';
 import * as transcriptionRepository from '@repo/db/repositories/transcription';
 import * as userRepository from '@repo/db/repositories/user';
 
-import { convertToMP3, getMediaDuration } from '../utils/media';
+import { convertToMP3, getMediaDuration, splitAudio } from '../utils/media';
 
 import openai from '../lib/openai';
 import { MAX_PER_DAY } from "../constants/quota";
+import { MAX_SIZE } from "../constants/audio";
 
 export interface CreateTranscription {
   userId: string;
@@ -67,26 +68,30 @@ export const createTranscription = async (data: CreateTranscription) => {
     status: Status.PROCESSING, 
   });
 
-  processTranscription(data.file.path, entity.id, data.file.filename);
-
+  processTranscription(data.file, entity.id);
+  
   return entity;
 };
 
-const processTranscription = async (filePath: string, transcriptionId: string, filename: string) => {
-    let mp3Pathname: string | undefined = undefined;
+const processTranscription = async (file: Express.Multer.File, transcriptionId: string) => {
+    let mp3Pathname: string | null = null;
+
     try {
-        mp3Pathname = await convertToMP3(filePath, filename);
-        
-        const transcription = await openai.audio.transcriptions.create({
-        file: fs.createReadStream(mp3Pathname || filePath),
-        model: process.env.TRANSCRIPTION_MODEL || "gpt-4o-transcribe",
-        });
+       let transcript: string = ''; 
+       mp3Pathname = await convertToMP3(file.path, file.filename);
+
+       const { size : mp3fileSize } = fs.statSync(mp3Pathname);
+       
+       if(mp3fileSize > MAX_SIZE)
+         transcript = await processMultipleAudios(mp3Pathname);
+       else
+         transcript = await processSingleAudio(mp3Pathname);
 
         await transcriptionRepository.update(transcriptionId, {
-            status: Status.DONE,
-            finishedAt: new Date(),
-            transcript: transcription.text,
-        });
+                    status: Status.DONE,
+                    finishedAt: new Date(),
+                    transcript,
+                });
 
     } catch (error) {
         console.error("Erro ao processar transcrição:", error);
@@ -95,7 +100,7 @@ const processTranscription = async (filePath: string, transcriptionId: string, f
             finishedAt: new Date(),
         });
     }finally {
-      [mp3Pathname, filePath].forEach(path => {
+      [mp3Pathname, file.path].forEach(path => {
           if (path) {
             fs.unlink(path, (err) => {
               if (err) {
@@ -104,6 +109,45 @@ const processTranscription = async (filePath: string, transcriptionId: string, f
           });
         }}
       );
+    }
+}
+
+const processSingleAudio = async (audioPath: string) => {
+    try {
+        const transcription = await openai.audio.transcriptions.create({
+        file: fs.createReadStream(audioPath),
+        model: process.env.TRANSCRIPTION_MODEL || "gpt-4o-transcribe",
+        });
+
+       return transcription.text;
+    } catch (error) {
+        throw Error(error instanceof Error ? error.message : "Erro ao processar transcrição");
+    }
+}
+
+const processMultipleAudios = async (audioPath: string) => {
+    const audioPaths = await splitAudio(audioPath);
+    try {
+        let fullTranscript = '';
+
+        audioPaths.forEach(async (path) => {
+        const transcription = await openai.audio.transcriptions.create({
+        file: fs.createReadStream(path),
+        model: process.env.TRANSCRIPTION_MODEL || "gpt-4o-transcribe",
+        });
+        fullTranscript += transcription.text + '\n';
+        });
+
+        return fullTranscript;
+    } catch (error) {
+        throw Error(error instanceof Error ? error.message : "Erro ao processar transcrição");
+    }finally {
+      audioPaths.forEach(path => {
+        fs.unlink(path, (err) => {
+            if (err) {
+                console.error("Erro ao deletar arquivo temporário:", err);
+        }});
+      })
     }
 }
 
