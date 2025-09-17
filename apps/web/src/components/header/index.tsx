@@ -13,8 +13,6 @@ import {
   AccordionTrigger,
 } from "@repo/ui/components/accordion";
 
-import { LoadingSpinner } from "@repo/ui/components/loading";
-
 import { Button } from "@repo/ui/components/button";
 
 import {
@@ -112,15 +110,13 @@ const renderMobileMenuItem = (item: MenuItem) => {
 };
 
 const AuthButton = () => {
-  const { authUser, signOut, loading } = useAuth();
+  const { authUser, signOut } = useAuth();
 
   const auth = {
     login: { title: "Login", url: "/login" },
     signup: { title: "Registre-se", url: "/sign-up" },
     logout: { title: "Sair", url: "/logout" },
   };
-
-  if (loading && authUser) return <LoadingSpinner />;
 
   if (authUser)
     return (
