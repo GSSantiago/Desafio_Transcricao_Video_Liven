@@ -41,7 +41,7 @@ export const getTranscriptionsByUserId = async (userId: string) => {
   if (!user) {
     throw new Error('Usuário não encontrado');
   }
-  return transcriptionRepository.findByUserId(user.id);
+  return transcriptionRepository.findAllByUserId(user.id);
 };
 
 export const createTranscription = async (data: CreateTranscription) => {

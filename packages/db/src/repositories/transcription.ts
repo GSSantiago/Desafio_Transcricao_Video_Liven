@@ -34,9 +34,10 @@ export const findById = async (id: string): Promise<Transcription | null> => {
   });
 };
 
-export const findByUserId = async (userId: string): Promise<Transcription[]> => {
+export const findAllByUserId = async (userId: string): Promise<Transcription[]> => {
   return prisma.transcription.findMany({
     where: { userId },
+    orderBy: { createdAt: 'desc' },
   });
 };
 
