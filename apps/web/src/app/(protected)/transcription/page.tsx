@@ -1,6 +1,8 @@
 'use client'
 import { useRef, useState } from "react";
 
+import Image from "next/image";
+
 import { Upload } from "lucide-react";
 import { toast } from 'react-toastify';
 
@@ -16,7 +18,6 @@ export default function Transcriptions() {
 
   const { authUser } = useAuth();
   
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
@@ -47,8 +48,8 @@ const handleUpload = async () => {
 
     } catch (error: unknown) {
       console.log(error);
-        if(error instanceof AxiosError && error.message.includes('Limite diário')) {
-          toast.error(error.message);
+        if(error instanceof AxiosError && error?.response?.data.error.includes('Limite diário')) {
+          toast.error(error.response.data.error);
         }
         else
         toast.error('Ocorreu um erro na solicitação!')
@@ -60,7 +61,15 @@ const handleUpload = async () => {
   }
 
   return (
-      <section className="relative overflow-hidden py-16">
+    <section className="relative overflow-hidden py-16 h-[calc(100vh-72px)]">
+      <div className="absolute inset-x-0 top-0 flex h-full w-full items-center justify-center opacity-100">
+        <Image
+          alt="background"
+          src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/patterns/square-alt-grid.svg"
+          className="[mask-image:radial-gradient(75%_75%_at_center,white,transparent)] opacity-90"
+          fill
+        />
+      </div>
         <div className="relative z-10 container mx-auto">
           <div className="flex flex-col items-center gap-6 text-center">
             <div>

@@ -54,7 +54,7 @@ export default function UserHistory() {
     <section className="relative overflow-hidden py-16">
       <div className="relative z-10 container mx-auto">
         <div className="flex flex-col items-center gap-6 text-center">
-          <div className="flex items-center justify-between w-full max-w-5xl">
+          <div className="flex items-center justify-between w-full max-w-8xl">
             <h2 className="lg:text-xl font-bold">
               Solicitações de transcrição feitas pelo usuário.
             </h2>
@@ -69,7 +69,7 @@ export default function UserHistory() {
           </div>
 
           {transcriptions.length ? (
-            <div className="mt-8 w-full max-w-5xl border rounded-md overflow-hidden">
+            <div className="mt-8 w-full max-w-9xl border rounded-md overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
