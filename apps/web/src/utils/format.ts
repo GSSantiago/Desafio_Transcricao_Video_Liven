@@ -1,8 +1,12 @@
 export const formatDate = (dateString?: string) => {
-  if(!dateString) return "—";
+  if (!dateString) return "—";
 
   const date = new Date(dateString);
-  return date.toLocaleDateString("pt-BR");
+
+  return date.toLocaleString("pt-BR", {
+    dateStyle: "short", 
+    timeStyle: "medium",
+  });
 };
 
 export const formatDuration = (seconds: number) => {
