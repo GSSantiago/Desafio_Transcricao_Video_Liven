@@ -1,33 +1,32 @@
-'use client'
-import { useRouter } from 'next/navigation'
-import Image from "next/image"
-import Link from "next/link"
-import { toast } from "react-toastify"
+"use client";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { toast } from "react-toastify";
 
-import { GalleryVerticalEnd } from "lucide-react"
+import { GalleryVerticalEnd } from "lucide-react";
 
-import BgImage from 'public/voice-to-text.png';
+import BgImage from "public/voice-to-text.png";
 
-import { RegisterForm, RegisterSchema } from "@/components/register-form"
-import { createUser } from "@/services/api/users"
+import { RegisterForm, RegisterSchema } from "@/components/register-form";
+import { createUser } from "@/services/api/users";
 
 export default function RegisterPage() {
   const router = useRouter();
   async function signUp(data: RegisterSchema) {
     try {
-        await createUser({
-            name: data.name,
-            email: data.email,
-            password: data.password
-        }); 
+      await createUser({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
 
-        toast.success('Conta registrada com sucesso!')
-        router.push('/login');
-
+      toast.success("Conta registrada com sucesso!");
+      router.push("/login");
     } catch {
-        toast.error('Erro ao criar a conta. Tente novamente mais tarde.');
+      toast.error("Erro ao criar a conta. Tente novamente mais tarde.");
     }
-}
+  }
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
@@ -42,7 +41,7 @@ export default function RegisterPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <RegisterForm onSubmit={signUp}/>
+            <RegisterForm onSubmit={signUp} />
           </div>
         </div>
       </div>
@@ -54,5 +53,5 @@ export default function RegisterPage() {
         />
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import fs from "fs";  
+import fs from "fs";
 
 import path from "path";
 
@@ -28,12 +28,15 @@ function getBitrate(filePath: string): Promise<number> {
   });
 }
 
-export function convertToMP3(filePath: string, filename: string): Promise<string>{
+export function convertToMP3(
+  filePath: string,
+  filename: string,
+): Promise<string> {
   return new Promise((resolve, reject) => {
     const formatedName = filename.replace(/\.[^/.]+$/, "");
 
     const folder = path.dirname(filePath);
-    const output = path.join(folder,`out-${formatedName}.mp3`);
+    const output = path.join(folder, `out-${formatedName}.mp3`);
 
     ffmpeg(filePath)
       .audioBitrate(128)
@@ -46,35 +49,37 @@ export function convertToMP3(filePath: string, filename: string): Promise<string
       })
       .save(output);
   });
- }
+}
 
- export function splitAudio(filePath: string, fileName: string): Promise<string[]> {
+export function splitAudio(
+  filePath: string,
+  fileName: string,
+): Promise<string[]> {
   return new Promise(async (resolve, reject) => {
     const outputFolder = path.dirname(filePath);
 
-    const bitrate = await getBitrate(filePath) / 8; //Em bytes
+    const bitrate = (await getBitrate(filePath)) / 8; //Em bytes
 
     const maxDurationSec = Math.floor(MAX_SIZE / bitrate);
 
     const outputPattern = path.join(outputFolder, `part-${fileName}-%03d.mp3`);
 
     ffmpeg(filePath)
-        .outputOptions([
-          "-f segment",
-          `-segment_time ${maxDurationSec}`,
-          "-c copy"
-        ])
-        .output(outputPattern)
-        .on("end", () => {
-          const files = fs
-            .readdirSync(outputFolder)
-            .filter((file) => file.startsWith("part-"))
-            .map((file) => path.join(outputFolder, file));
+      .outputOptions([
+        "-f segment",
+        `-segment_time ${maxDurationSec}`,
+        "-c copy",
+      ])
+      .output(outputPattern)
+      .on("end", () => {
+        const files = fs
+          .readdirSync(outputFolder)
+          .filter((file) => file.startsWith("part-"))
+          .map((file) => path.join(outputFolder, file));
 
-          resolve(files);
-        })
-        .on("error", (err) => reject(err))
-        .run();
-    });
-
-  }
+        resolve(files);
+      })
+      .on("error", (err) => reject(err))
+      .run();
+  });
+}

@@ -15,7 +15,9 @@ export interface UpdateTranscription {
   transcript?: string;
 }
 
-export const create = async (data: CreateTranscription): Promise<Transcription> => {
+export const create = async (
+  data: CreateTranscription,
+): Promise<Transcription> => {
   return prisma.transcription.create({
     data: {
       userId: data.userId,
@@ -34,14 +36,19 @@ export const findById = async (id: string): Promise<Transcription | null> => {
   });
 };
 
-export const findAllByUserId = async (userId: string): Promise<Transcription[]> => {
+export const findAllByUserId = async (
+  userId: string,
+): Promise<Transcription[]> => {
   return prisma.transcription.findMany({
     where: { userId },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: "desc" },
   });
 };
 
-export const update = async (id: string, data: UpdateTranscription): Promise<Transcription> => {
+export const update = async (
+  id: string,
+  data: UpdateTranscription,
+): Promise<Transcription> => {
   return prisma.transcription.update({
     where: { id },
     data: {
@@ -61,7 +68,7 @@ export const findAll = async (): Promise<Transcription[]> => {
 };
 
 export const getUserDailyUsage = async (userId: string) => {
-  const startDate = new Date(new Date().setHours(0, 0, 0));  
+  const startDate = new Date(new Date().setHours(0, 0, 0));
   const endDate = new Date(new Date().setHours(23, 59, 59));
 
   const result = await prisma.transcription.aggregate({
@@ -73,8 +80,8 @@ export const getUserDailyUsage = async (userId: string) => {
     where: {
       userId,
       createdAt: {
-        gte: startDate, 
-        lt: endDate, 
+        gte: startDate,
+        lt: endDate,
       },
     },
   });
@@ -83,6 +90,5 @@ export const getUserDailyUsage = async (userId: string) => {
     totalDuration: result._sum.durationInSeconds || 0,
     totalFileSize: result._sum.fileSize || 0,
     totalTranscriptions: result._count,
-
   };
 };

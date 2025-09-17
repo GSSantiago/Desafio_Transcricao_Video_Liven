@@ -1,10 +1,10 @@
-'use client'
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 
 import { Menu, User } from "lucide-react";
 
-import Icon from 'public/video-icon.svg'
+import Icon from "public/video-icon.svg";
 
 import {
   Accordion,
@@ -42,7 +42,6 @@ interface MenuItem {
   icon?: React.ReactNode;
   items?: MenuItem[];
 }
-
 
 const SubMenuLink = ({ item }: { item: MenuItem }) => (
   <Link
@@ -121,11 +120,11 @@ const AuthButton = () => {
     logout: { title: "Sair", url: "/logout" },
   };
 
-  if(loading && authUser) return <LoadingSpinner />
+  if (loading && authUser) return <LoadingSpinner />;
 
-  if(authUser)
+  if (authUser)
     return (
-   <div className="flex gap-2"> 
+      <div className="flex gap-2">
         <div className="flex items-center px-3 py-1 rounded-full text-sm font-medium">
           <User />
           <span className="ml-2">{authUser.name}</span>
@@ -133,27 +132,27 @@ const AuthButton = () => {
         <Button size="sm" onClick={() => signOut()}>
           {auth.logout.title}
         </Button>
-    </div>
-    )
-
-   return (
-    <div className="flex gap-2">
-        <Button asChild variant="outline" size="sm">
-          <Link href={auth.login.url}>{auth.login.title}</Link>
-        </Button>
-        <Button asChild size="sm">
-          <Link href={auth.signup.url}>{auth.signup.title}</Link>
-        </Button>
       </div>
-    )
-}
+    );
+
+  return (
+    <div className="flex gap-2">
+      <Button asChild variant="outline" size="sm">
+        <Link href={auth.login.url}>{auth.login.title}</Link>
+      </Button>
+      <Button asChild size="sm">
+        <Link href={auth.signup.url}>{auth.signup.title}</Link>
+      </Button>
+    </div>
+  );
+};
 
 function HeaderWitAuth() {
   const logo = {
     url: "/",
     src: Icon,
     alt: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
-    title: "Transcriptor 3000"
+    title: "Transcriptor 3000",
   };
 
   const menu = [
@@ -163,92 +162,92 @@ function HeaderWitAuth() {
   ];
 
   return (
-      <section className="py-4 flex justify-center">
-        <div className="container">
-          {/* Desktop Menu */}
-          <nav className="hidden justify-between lg:flex">
-            <div className="flex items-center gap-6">
-              <Link href={logo.url} className="flex items-center gap-2">
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={20}
-                  height={20}
-                  className="max-h-8 dark:invert"
-                />
-                <span className="text-lg font-semibold tracking-tighter">
-                  {logo.title}
-                </span>
-              </Link>
-              <div className="flex items-center">
-                <NavigationMenu>
-                  <NavigationMenuList>
-                    {menu.map((item) => renderMenuItem(item))}
-                  </NavigationMenuList>
-                </NavigationMenu>
-              </div>
-            </div>
-           
-            <AuthButton />
-          </nav>
-
-          {/* Mobile Menu */}
-          <div className="block lg:hidden">
-            <div className="flex items-center justify-between">
-              {/* Logo */}
-              <Link href={logo.url} className="flex items-center gap-2">
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={32}
-                  height={32}
-                  className="max-h-8 dark:invert"
-                />
-              </Link>
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <Menu className="size-4" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent className="overflow-y-auto">
-                  <SheetHeader>
-                    <SheetTitle>
-                      <Link href={logo.url} className="flex items-center gap-2">
-                        <Image
-                          src={logo.src}
-                          alt={logo.alt}
-                          width={32}
-                          height={32}
-                          className="max-h-8 dark:invert"
-                        />
-                      </Link>
-                    </SheetTitle>
-                  </SheetHeader>
-                  <div className="flex flex-col gap-6 p-4">
-                    <Accordion
-                      type="single"
-                      collapsible
-                      className="flex w-full flex-col gap-4"
-                    >
-                      {menu.map((item) => renderMobileMenuItem(item))}
-                    </Accordion>
-
-                    <AuthButton />
-                  </div>
-                </SheetContent>
-              </Sheet>
+    <section className="py-4 flex justify-center">
+      <div className="container">
+        {/* Desktop Menu */}
+        <nav className="hidden justify-between lg:flex">
+          <div className="flex items-center gap-6">
+            <Link href={logo.url} className="flex items-center gap-2">
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                width={20}
+                height={20}
+                className="max-h-8 dark:invert"
+              />
+              <span className="text-lg font-semibold tracking-tighter">
+                {logo.title}
+              </span>
+            </Link>
+            <div className="flex items-center">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  {menu.map((item) => renderMenuItem(item))}
+                </NavigationMenuList>
+              </NavigationMenu>
             </div>
           </div>
+
+          <AuthButton />
+        </nav>
+
+        {/* Mobile Menu */}
+        <div className="block lg:hidden">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link href={logo.url} className="flex items-center gap-2">
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                width={32}
+                height={32}
+                className="max-h-8 dark:invert"
+              />
+            </Link>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Menu className="size-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>
+                    <Link href={logo.url} className="flex items-center gap-2">
+                      <Image
+                        src={logo.src}
+                        alt={logo.alt}
+                        width={32}
+                        height={32}
+                        className="max-h-8 dark:invert"
+                      />
+                    </Link>
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col gap-6 p-4">
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="flex w-full flex-col gap-4"
+                  >
+                    {menu.map((item) => renderMobileMenuItem(item))}
+                  </Accordion>
+
+                  <AuthButton />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
   );
 }
 
 export default function Header() {
-  return(
+  return (
     <AuthUserProvider>
-      <HeaderWitAuth/>
+      <HeaderWitAuth />
     </AuthUserProvider>
-    );
+  );
 }

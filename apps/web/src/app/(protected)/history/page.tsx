@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useCallback, useEffect, useState } from "react";
 
 import {
@@ -8,11 +8,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@repo/ui/components/table"
-import { Button } from "@repo/ui/components/button"
+} from "@repo/ui/components/table";
+import { Button } from "@repo/ui/components/button";
 
-import { getAllTranscriptionsByUserId, Transcription } from "@/services/api/transcription";
-import { handleTxtDownload } from "@/utils/download"
+import {
+  getAllTranscriptionsByUserId,
+  Transcription,
+} from "@/services/api/transcription";
+import { handleTxtDownload } from "@/utils/download";
 import { formatDate, formatDuration, formatStatus } from "@/utils/format";
 import { useAuth } from "@/context/AuthUserContext";
 
@@ -23,7 +26,7 @@ export default function UserHistory() {
   const [transcriptions, setTranscriptions] = useState<Transcription[]>([]);
 
   const { authUser } = useAuth();
-  
+
   const fetchTranscriptions = useCallback(async () => {
     setLoading(true);
     const userId = authUser?.uid;
@@ -39,16 +42,15 @@ export default function UserHistory() {
   }, [authUser]);
 
   useEffect(() => {
-    if(authUser?.uid)
-    fetchTranscriptions();
+    if (authUser?.uid) fetchTranscriptions();
   }, [authUser, fetchTranscriptions]);
 
-  if (loading) 
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <LoadingSpinner />
-    </div>
-    )
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingSpinner />
+      </div>
+    );
 
   return (
     <section className="relative overflow-hidden py-16">
@@ -64,7 +66,7 @@ export default function UserHistory() {
               onClick={fetchTranscriptions}
               disabled={loading}
             >
-              {loading ? <LoadingSpinner />  : "Atualizar"}
+              {loading ? <LoadingSpinner /> : "Atualizar"}
             </Button>
           </div>
 
@@ -108,7 +110,7 @@ export default function UserHistory() {
                               onClick={() =>
                                 handleTxtDownload(
                                   transcription.transcript!,
-                                  transcription.fileName
+                                  transcription.fileName,
                                 )
                               }
                             >

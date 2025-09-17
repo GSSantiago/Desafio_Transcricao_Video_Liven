@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import * as userService from '../services/user.service';
+import { Request, Response } from "express";
+import * as userService from "../services/user.service";
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -16,7 +16,7 @@ export const getUserById = async (req: Request, res: Response) => {
     const user = await userService.getUserById(id);
     return res.json(user);
   } catch (error: any) {
-    if (error.message === 'Usuário não encontrado') {
+    if (error.message === "Usuário não encontrado") {
       return res.status(404).json({ error: error.message });
     }
     return res.status(500).json({ error: error.message });
@@ -26,10 +26,10 @@ export const getUserById = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
-    const user = await userService.createUser({ name, email, password});
+    const user = await userService.createUser({ name, email, password });
     return res.status(201).json(user);
   } catch (error: any) {
-    if (error.message === 'Email já está em uso') {
+    if (error.message === "Email já está em uso") {
       return res.status(400).json({ error: error.message });
     }
     return res.status(500).json({ error: error.message });
@@ -43,7 +43,7 @@ export const updateUser = async (req: Request, res: Response) => {
     const user = await userService.updateUser(id, { name, email });
     return res.json(user);
   } catch (error: any) {
-    if (error.message === 'Usuário não encontrado') {
+    if (error.message === "Usuário não encontrado") {
       return res.status(404).json({ error: error.message });
     }
     return res.status(500).json({ error: error.message });
@@ -56,7 +56,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     await userService.deleteUser(id);
     return res.status(204).send();
   } catch (error: any) {
-    if (error.message === 'Usuário não encontrado') {
+    if (error.message === "Usuário não encontrado") {
       return res.status(404).json({ error: error.message });
     }
     return res.status(500).json({ error: error.message });

@@ -5,7 +5,8 @@ type LoadingProps = {
 };
 
 export const LoadingSpinner: React.FC<LoadingProps> = ({ size = "md" }) => {
-  const sizeClass = size === "sm" ? "w-6 h-6" : size === "lg" ? "w-12 h-12" : "w-8 h-8";
+  const sizeClass =
+    size === "sm" ? "w-6 h-6" : size === "lg" ? "w-12 h-12" : "w-8 h-8";
 
   return (
     <div

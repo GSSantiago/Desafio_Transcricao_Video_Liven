@@ -1,14 +1,14 @@
-'use client'
-import Link from "next/link"
-import { z } from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+"use client";
+import Link from "next/link";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { cn } from "@repo/ui/lib/utils"
-import { Button } from "@repo/ui/components/button"
-import { Input } from "@repo/ui/components/input"
-import { Label } from "@repo/ui/components/label"
-import { ArrowLeft } from "lucide-react"
+import { cn } from "@repo/ui/lib/utils";
+import { Button } from "@repo/ui/components/button";
+import { Input } from "@repo/ui/components/input";
+import { Label } from "@repo/ui/components/label";
+import { ArrowLeft } from "lucide-react";
 
 const registerSchema = z
   .object({
@@ -20,19 +20,22 @@ const registerSchema = z
       .regex(/[A-Z]/, "Deve conter ao menos uma letra maiúscula")
       .regex(/[a-z]/, "Deve conter ao menos uma letra minúscula")
       .regex(/[0-9]/, "Deve conter ao menos um número")
-      .regex(/[!@#$%^&*(),.?":{}|<>]/, "Deve conter ao menos um caractere especial"),
+      .regex(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Deve conter ao menos um caractere especial",
+      ),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "As senhas não coincidem",
     path: ["confirmPassword"],
-  })
+  });
 
-export type RegisterSchema = z.infer<typeof registerSchema>
+export type RegisterSchema = z.infer<typeof registerSchema>;
 
 type RegisterFormProps = {
-  onSubmit: (data: RegisterSchema) => void | Promise<void>
-}
+  onSubmit: (data: RegisterSchema) => void | Promise<void>;
+};
 
 export function RegisterForm({ onSubmit }: RegisterFormProps) {
   const {
@@ -41,7 +44,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
     formState: { errors, isSubmitting },
   } = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
-  })
+  });
 
   return (
     <form
@@ -138,5 +141,5 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         </Button>
       </div>
     </form>
-  )
+  );
 }

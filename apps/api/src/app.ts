@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv'; 
+import * as dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
@@ -13,7 +13,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/v1', routes);
+app.use("/v1", routes);
 
 app.use(errorHandler);
 

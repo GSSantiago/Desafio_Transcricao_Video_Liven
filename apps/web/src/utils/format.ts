@@ -4,7 +4,7 @@ export const formatDate = (dateString?: string) => {
   const date = new Date(dateString);
 
   return date.toLocaleString("pt-BR", {
-    dateStyle: "short", 
+    dateStyle: "short",
     timeStyle: "medium",
   });
 };
@@ -16,7 +16,7 @@ export const formatDuration = (seconds: number) => {
 };
 
 export const formatStatus = {
-    PROCESSING: "Processando",
-    DONE: "Concluído",
-    FAILED: "Falhou"
-}
+  PROCESSING: "Processando",
+  DONE: "Concluído",
+  FAILED: "Falhou",
+};

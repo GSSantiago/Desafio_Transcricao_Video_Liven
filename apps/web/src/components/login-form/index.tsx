@@ -1,33 +1,33 @@
-'use client'
+"use client";
 
-import Link from "next/link"
-import { z } from "zod"
+import Link from "next/link";
+import { z } from "zod";
 
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { cn } from "@repo/ui/lib/utils"
-import { Button } from "@repo/ui/components/button"
+import { cn } from "@repo/ui/lib/utils";
+import { Button } from "@repo/ui/components/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@repo/ui/components/card"
-import { Input } from "@repo/ui/components/input"
-import { Label } from "@repo/ui/components/label"
+} from "@repo/ui/components/card";
+import { Input } from "@repo/ui/components/input";
+import { Label } from "@repo/ui/components/label";
 
 const loginSchema = z.object({
   email: z.string().email("Digite um e-mail válido"),
   password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
-})
+});
 
-export type LoginSchema = z.infer<typeof loginSchema>
+export type LoginSchema = z.infer<typeof loginSchema>;
 
 type LoginFormProps = {
-  onSubmit: (data: LoginSchema) => void | Promise<void>
-}
+  onSubmit: (data: LoginSchema) => void | Promise<void>;
+};
 
 export function LoginForm({ onSubmit }: LoginFormProps) {
   const {
@@ -36,21 +36,26 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     formState: { errors, isSubmitting },
   } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
-  })
+  });
 
   return (
     <div className={cn("flex flex-col gap-6")}>
       <Card>
         <CardHeader>
           <CardTitle className="text-center">
-            <Link href="/" className="underline">Transcriptor 3000</Link>
+            <Link href="/" className="underline">
+              Transcriptor 3000
+            </Link>
           </CardTitle>
           <CardDescription className="text-center">
             Digite suas credenciais nos campos abaixo
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-6"
+          >
             <div className="grid gap-3">
               <Label htmlFor="email">Email</Label>
               <div>
@@ -61,7 +66,9 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
                   {...register("email")}
                 />
                 {errors.email && (
-                  <span className="text-xs px-1 text-red-500">{errors.email.message}</span>
+                  <span className="text-xs px-1 text-red-500">
+                    {errors.email.message}
+                  </span>
                 )}
               </div>
             </div>
@@ -76,7 +83,9 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
                   {...register("password")}
                 />
                 {errors.password && (
-                  <span className="text-xs px-1 text-red-500">{errors.password.message}</span>
+                  <span className="text-xs px-1 text-red-500">
+                    {errors.password.message}
+                  </span>
                 )}
               </div>
             </div>
@@ -95,5 +104,5 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

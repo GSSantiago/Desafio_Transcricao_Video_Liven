@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { auth } from "../";
 import {
-   onAuthStateChanged as _onAuthStateChanged,
-   User as FirebaseUser,
-   signInWithEmailAndPassword as _signInWithEmailAndPassword,
-   signOut as _signOut 
-  } from "firebase/auth";
+  onAuthStateChanged as _onAuthStateChanged,
+  User as FirebaseUser,
+  signInWithEmailAndPassword as _signInWithEmailAndPassword,
+  signOut as _signOut,
+} from "firebase/auth";
 
 export interface AuthUser {
   uid: string;
@@ -44,11 +44,10 @@ export default function useFirebaseAuth() {
   const signInWithEmailAndPassword = (email: string, password: string) =>
     _signInWithEmailAndPassword(auth, email, password);
 
-  const signOut = () =>
-  _signOut(auth).then(clear);
+  const signOut = () => _signOut(auth).then(clear);
 
   const onAuthStateChanged = (
-    cb: (user: FirebaseUser | null) => void
+    cb: (user: FirebaseUser | null) => void,
   ): (() => void) => {
     return _onAuthStateChanged(auth, cb);
   };
@@ -62,6 +61,6 @@ export default function useFirebaseAuth() {
     authUser,
     signInWithEmailAndPassword,
     loading,
-    signOut
+    signOut,
   };
 }

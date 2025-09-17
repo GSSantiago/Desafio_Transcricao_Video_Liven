@@ -1,5 +1,5 @@
-import * as userRepository from '@repo/db/repositories/user';
-import { auth } from '../lib/firebase';
+import * as userRepository from "@repo/db/repositories/user";
+import { auth } from "../lib/firebase";
 
 export interface CreateUser {
   name: string;
@@ -19,7 +19,7 @@ export const getAllUsers = async () => {
 export const getUserById = async (id: string) => {
   const user = await userRepository.findById(id);
   if (!user) {
-    throw new Error('Usuário não encontrado');
+    throw new Error("Usuário não encontrado");
   }
   return user;
 };
@@ -27,7 +27,7 @@ export const getUserById = async (id: string) => {
 export const createUser = async (data: CreateUser) => {
   const existUser = await userRepository.findByEmail(data.email);
   if (existUser) {
-    throw new Error('Email já está em uso');
+    throw new Error("Email já está em uso");
   }
 
   try {
@@ -42,14 +42,14 @@ export const createUser = async (data: CreateUser) => {
 
     return createdUser;
   } catch (error) {
-    throw new Error('Erro ao criar usuário');
+    throw new Error("Erro ao criar usuário");
   }
 };
 
 export const updateUser = async (id: string, data: UpdateUser) => {
   const user = await userRepository.findById(id);
   if (!user) {
-    throw new Error('Usuário não encontrado');
+    throw new Error("Usuário não encontrado");
   }
 
   return userRepository.update(id, data);
@@ -58,7 +58,7 @@ export const updateUser = async (id: string, data: UpdateUser) => {
 export const deleteUser = async (id: string) => {
   const user = await userRepository.findById(id);
   if (!user) {
-    throw new Error('Usuário não encontrado');
+    throw new Error("Usuário não encontrado");
   }
 
   return userRepository.remove(id);
