@@ -116,7 +116,7 @@ const processSingleAudio = async (audioPath: string) => {
     try {
         const transcription = await openai.audio.transcriptions.create({
         file: fs.createReadStream(audioPath),
-        model: process.env.TRANSCRIPTION_MODEL || "gpt-4o-transcribe",
+        model: process.env.TRANSCRIPTION_MODEL || "whisper-1",
         });
 
        return transcription.text;
@@ -129,14 +129,13 @@ const processMultipleAudios = async (audioPath: string) => {
     const audioPaths = await splitAudio(audioPath);
     try {
         let fullTranscript = '';
-
-        audioPaths.forEach(async (path) => {
-        const transcription = await openai.audio.transcriptions.create({
-        file: fs.createReadStream(path),
-        model: process.env.TRANSCRIPTION_MODEL || "gpt-4o-transcribe",
-        });
-        fullTranscript += transcription.text + '\n';
-        });
+        for (const path of audioPaths) {
+          const transcription = await openai.audio.transcriptions.create({
+          file: fs.createReadStream(path),
+          model: process.env.TRANSCRIPTION_MODEL || "gpt-4o-transcribe",
+          });
+          fullTranscript += transcription.text + '\n';
+        }
 
         return fullTranscript;
     } catch (error) {

@@ -33,7 +33,7 @@ export function convertToMP3(filePath: string, filename: string): Promise<string
     const formatedName = filename.replace(/\.[^/.]+$/, "");
 
     const folder = path.dirname(filePath);
-    const output = path.join(folder,`${formatedName}.mp3`);
+    const output = path.join(folder,`out-${formatedName}.mp3`);
 
     ffmpeg(filePath)
       .audioBitrate(128)
@@ -56,7 +56,7 @@ export function convertToMP3(filePath: string, filename: string): Promise<string
 
     const maxDurationSec = Math.floor(MAX_SIZE / bitrate);
 
-    const outputPattern = path.join(outputFolder, "out-%d.mp3");
+    const outputPattern = path.join(outputFolder, "part-%03d.mp3");
 
     ffmpeg(filePath)
         .outputOptions([
@@ -68,7 +68,7 @@ export function convertToMP3(filePath: string, filename: string): Promise<string
         .on("end", () => {
           const files = fs
             .readdirSync(outputFolder)
-            .filter((file) => file.startsWith("out-"))
+            .filter((file) => file.startsWith("part-"))
             .map((file) => path.join(outputFolder, file));
 
           resolve(files);
